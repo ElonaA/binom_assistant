@@ -28,7 +28,6 @@ jobs:
       contents: read
       packages: write
       id-token: write
-      attestations: write
 
     steps:
       - name: Checkout repository
@@ -45,11 +44,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set lowercase image name
+        id: image
+        run: |
+          echo "image_name=$(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
       - name: Extract metadata (tags, labels)
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ steps.image.outputs.image_name }}
           tags: |
             # Для тегов v1.2.3 создаем: 1.2.3, 1.2, 1, latest
             type=semver,pattern={{version}}
