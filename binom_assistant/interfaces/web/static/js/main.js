@@ -434,7 +434,7 @@ async function updateSystemStatus() {
 /**
  * Кнопки в хедере
  */
-function initHeaderButtons() {
+async function initHeaderButtons() {
     const refreshBtn = document.getElementById('refreshBtn');
     if (refreshBtn) {
         refreshBtn.addEventListener('click', async () => {
@@ -530,7 +530,7 @@ function initHeaderButtons() {
 
     // Инициализация системы уведомлений
     if (typeof initNotifications === 'function') {
-        initNotifications();
+        await initNotifications();
     }
 
     // Кнопка настроек удалена, теперь это пункт в навигации
@@ -720,11 +720,11 @@ async function checkAndResumeActiveTasks() {
     setTimeout(scheduleNextCheck, 2000);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     console.log('Binom Assistant initialized');
 
     initNavigation();
-    initHeaderButtons();
+    await initHeaderButtons();
 
     // Скрываем лоадер после загрузки
     setTimeout(hideLoader, 500);

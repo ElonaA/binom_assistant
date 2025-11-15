@@ -83,7 +83,7 @@ async function loadModuleNames() {
 /**
  * Инициализация модуля уведомлений
  */
-function initNotifications() {
+async function initNotifications() {
     const notificationsBtn = document.getElementById('notificationsBtn');
     notificationsDropdown = document.getElementById('notificationsDropdown');
     notificationsList = document.getElementById('notificationsList');
@@ -94,7 +94,7 @@ function initNotifications() {
     }
 
     // Загружаем список модулей для маппинга названий
-    loadModuleNames();
+    await loadModuleNames();
 
     // Клик по кнопке - показать/скрыть
     notificationsBtn.addEventListener('click', (e) => {
@@ -137,6 +137,11 @@ function toggleNotificationsDropdown() {
  */
 async function openNotificationsDropdown() {
     notificationsDropdown.style.display = 'flex';
+
+    // Убеждаемся что модули загружены
+    if (Object.keys(moduleNamesMap).length === 0) {
+        await loadModuleNames();
+    }
 
     // Загружаем уведомления
     await loadNotifications();
