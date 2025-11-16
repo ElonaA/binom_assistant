@@ -847,18 +847,32 @@ window.copyDonateAddress = copyDonateAddress;
 
 /**
  * Открыть модалку первого запуска
- * Проверяет localStorage - показывает только 1 раз за сессию first_run
+ * Проверяет localStorage - показывает только 1 раз навсегда
+ * Показывается только на главной странице (dashboard)
  */
 function openFirstRunModal() {
     const modal = document.getElementById('firstRunModal');
     if (!modal) return;
 
-    // Проверяем, показывали ли уже модалку в этой сессии
+    // Проверяем, что мы на главной странице
+    const currentPath = window.location.pathname;
+    const isDashboard = currentPath === '/' || currentPath === '/index' || currentPath === '/dashboard';
+
+    if (!isDashboard) {
+        console.log('First run modal skipped - not on dashboard page');
+        return;
+    }
+
+    // Проверяем, показывали ли уже модалку
     const modalShown = localStorage.getItem('firstRunModalShown');
     if (modalShown === 'true') {
         console.log('First run modal already shown, skipping');
         return;
     }
+
+    // Сохраняем флаг сразу при открытии, чтобы не показывать повторно при обновлении страницы
+    localStorage.setItem('firstRunModalShown', 'true');
+    console.log('First run modal opened and flag saved');
 
     modal.style.display = 'block';
     // Небольшая задержка для плавной анимации
@@ -869,14 +883,10 @@ function openFirstRunModal() {
 
 /**
  * Закрыть модалку первого запуска
- * Сохраняет флаг в localStorage, чтобы не показывать повторно
  */
 function closeFirstRunModal() {
     const modal = document.getElementById('firstRunModal');
     if (!modal) return;
-
-    // Сохраняем флаг, что модалка была показана и закрыта
-    localStorage.setItem('firstRunModalShown', 'true');
 
     modal.classList.remove('show');
     // Скрываем после анимации
@@ -945,7 +955,7 @@ window.isPWASupported = isPWASupported;
 if (isPWASupported()) {
     window.addEventListener('load', async () => {
         try {
-            const registration = await navigator.serviceWorker.register('/static/service-worker.js');
+            const registration = await navigator.serviceWorker.register('/static/js/service-worker.js');
             console.log('[PWA] Service Worker registered:', registration.scope);
 
             // Проверка обновлений каждые 60 секунд
