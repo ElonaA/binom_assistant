@@ -1093,3 +1093,15 @@ body:not(.dark-theme) .header-right .nav-item.active {
     background: rgba(239, 68, 68, 0.2);
     border-color: rgba(239, 68, 68, 0.5);
 }
+
+.footer-disclaimer a,
+.footer-copyright a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.footer-disclaimer a:hover,
+.footer-copyright a:hover {
+    opacity: 0.7;
+}
